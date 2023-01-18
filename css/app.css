@@ -5,7 +5,7 @@
 }
 
 body {
-    background-image: url(/2img.jpg);
+    background-image: url(../2img.jpg);
     /* background-repeat: no-repeat; */
     background-size: cover;
     margin: auto;
