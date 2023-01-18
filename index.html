@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mine Sweeper</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body onload="init()">
+    <h1>Mine Sweeper</h1>
+    <section class="container">
+        <h2 class="timer"> Timer:</h2>
+        <div class="MegaHint-start-btns">
+            <button class="startBtn " onmousedown="init()">😃</button>
+            <button onclick="megaHint()" class="MegaHint">Mega Hint</button>
+        </div>
+        <div>
+        <button onclick="difficulty(this)" class="gameButtons button1">Beginner</button>
+        <button onclick="difficulty(this)" class="gameButtons button2">Medium</button>
+        <button onclick="difficulty(this)" class="gameButtons button3">Expert</button>
+        </div>
+
+        <div class="board-container"></div>
+
+        <h3 class="hearts">Hearts Left:</h3>
+        <div class="special-btns">
+
+            <button onclick="useHint(this)" class="hint ">Hints Left:</button>
+            <button onclick="safeClick(this)" class="safeClick ">Safe Clicks Left:</button>
+            <button onclick="sevenBoom(this)" class="sevenBoom">7 BOOM!!</button>
+        </div>
+    </div>
+</section>
+    <script src="js/utils.js"></script>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
