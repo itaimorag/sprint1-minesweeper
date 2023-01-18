@@ -184,9 +184,9 @@ function cellClicked(elCell, iIdx, jIdx) {
         setTimeout(hideCellsMegaHint, 2000, gFirstMove.i, gFirstMove.j, iIdx, jIdx, shownCells)
     }
     else if (gIsHintOn) {
-        expandShownForHint(gBoard, iIdx, jIdx)
-        setTimeout(expandUnShownForHint, 1000, gBoard, iIdx, jIdx)
-        console.log(`gGame.shownCount= `, gGame.shownCount)
+        var shownCellsFromNormalHint = expandShownForHint(gBoard, iIdx, jIdx)
+        setTimeout(expandUnShownForHint, 1000, gBoard, iIdx, jIdx, shownCellsFromNormalHint)
+        // console.log(`gGame.shownCount= `, gGame.shownCount)
     }
     else {
         if (elCell.isMine) {
@@ -287,6 +287,7 @@ function expandShown(board, elCell, rowIdx, colIdx) {
 
 
 function expandShownForHint(board, rowIdx, colIdx) {
+    var shownCells = []
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
@@ -302,13 +303,14 @@ function expandShownForHint(board, rowIdx, colIdx) {
                     renderCell(i, j, gBoard[i][j].minesAroundCount)
                 }
             }
-            else gGame.shownCount--
+            else shownCells.push({ i, j })
         }
     }
+    return shownCells
 }
 
 
-function expandUnShownForHint(board, rowIdx, colIdx) {
+function expandUnShownForHint(board, rowIdx, colIdx, shownCells) {
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
@@ -318,6 +320,14 @@ function expandUnShownForHint(board, rowIdx, colIdx) {
                 renderCell(i, j, ' ')
             }
         }
+    }
+    for (var p = 0; p < shownCells.length; p++) {
+        if (gBoard[shownCells[p].i][shownCells[p].j].isMarked) renderCell(shownCells[p].i, shownCells[p].j, FLAG)
+        else {
+            if (gBoard[shownCells[p].i][shownCells[p].j].minesAroundCount === 0) renderCell(shownCells[p].i, shownCells[p].j, '')
+            else renderCell(shownCells[p].i, shownCells[p].j, gBoard[shownCells[p].i][shownCells[p].j].minesAroundCount)
+        }
+        gBoard[shownCells[p].i][shownCells[p].j].isShown = true
     }
     switch (gHintCounter) {
         case 2:
@@ -460,7 +470,7 @@ function showCellsMegaHint(previousI, previousJ, currentI, currentJ) {
                     renderCell(i, j, gBoard[i][j].minesAroundCount)
                 }
             }
-           else shownCells.push({ i, j })
+            else shownCells.push({ i, j })
         }
     }
     return shownCells
@@ -468,14 +478,13 @@ function showCellsMegaHint(previousI, previousJ, currentI, currentJ) {
 
 
 function hideCellsMegaHint(previousI, previousJ, currentI, currentJ, shownCells) {
-    console.log(`shownCells = `, shownCells)
     for (var i = previousI; i <= currentI; i++) {
         for (var j = previousJ; j <= currentJ; j++) {
             if (gBoard[i][j].isShown) {
                 gBoard[i][j].isShown = false
                 renderCell(i, j, ' ')
                 for (var g = 0; g < shownCells.length; g++) {
-                    if ((shownCells[g].i === i )&&(shownCells[g].j === j)){
+                    if ((shownCells[g].i === i) && (shownCells[g].j === j)) {
                         gBoard[i][j].isShown = true
                         renderCell(i, j, gBoard[i][j].minesAroundCount)
                     }
